@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Setter
 @Getter
+@Table(name = "BOOKS")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +24,10 @@ public class Book {
     private AgeGroup ageGroup;
 
     private BigDecimal price;
+    @Column(name = "publication_year") // Зв'язок зі стовпцем PUBLICATION_YEAR
     private LocalDate publicationDate;
     private String author;
+    @Column(name = "number_of_pages")
     private Integer pages;
     private String characteristics;
     private String description;

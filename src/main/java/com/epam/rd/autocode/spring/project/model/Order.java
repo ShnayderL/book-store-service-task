@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@Table(name = "ORDERS")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
