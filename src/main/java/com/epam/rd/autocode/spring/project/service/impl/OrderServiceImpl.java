@@ -79,9 +79,9 @@ public class OrderServiceImpl implements OrderService {
         List<BookItem> bookItems = new ArrayList<>();
         if (orderDTO.getBookItems() != null) {
             for (BookItemDTO bookItemDTO : orderDTO.getBookItems()) {
-                // Знаходимо книгу за назвою
-                Book book = bookRepository.findByName(bookItemDTO.getBook().getName())
-                        .orElseThrow(() -> new NotFoundException("Book not found: " + bookItemDTO.getBook().getName()));
+                // Знаходимо книгу за назвою, використовуючи нове поле bookName
+                Book book = bookRepository.findByName(bookItemDTO.getBookName())
+                        .orElseThrow(() -> new NotFoundException("Book not found: " + bookItemDTO.getBookName()));
                 BookItem bookItem = new BookItem();
                 bookItem.setBook(book);
                 bookItem.setQuantity(bookItemDTO.getQuantity());
