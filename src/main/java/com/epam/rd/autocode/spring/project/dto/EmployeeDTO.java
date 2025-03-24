@@ -1,5 +1,19 @@
 package com.epam.rd.autocode.spring.project.dto;
 
-public class EmployeeDTO{
-    // TODO Place your code here
+import lombok.*;
+import java.time.LocalDate;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Setter
+@Getter
+public class EmployeeDTO {
+    private String email;
+    private String password;
+    private String name;
+    private String phone;
+    private LocalDate birthDate;
 }
