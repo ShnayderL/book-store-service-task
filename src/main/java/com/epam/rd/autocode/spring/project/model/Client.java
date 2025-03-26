@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 @Table(name = "CLIENTS")
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class Client extends User {
     private BigDecimal balance;
 

@@ -7,8 +7,10 @@ import java.time.LocalDate;
 @Table(name = "EMPLOYEES")
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class Employee extends User {
-    private  LocalDate birthDate;
+    private LocalDate birthDate;
     private String phone;
 
     public Employee(Long id, String email, String password, String name,
@@ -18,5 +20,3 @@ public class Employee extends User {
         this.phone = phone;
     }
 }
-
-
