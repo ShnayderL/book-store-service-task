@@ -19,10 +19,27 @@
         </div>
 
         <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="about">About</a></li>
-            <li><a href="register">Register</a></li>
-            <li><a href="login">Login</a></li>
+            <li><a href="/" th:utext="#{home}"></a></li>
+            <li><a href="about" th:utext="#{about}"></a></li>
+            <li th:if="${!#authorization.expression('isAuthenticated()')}">
+                <a href="register" th:utext="#{register}"></a>
+            </li>
+            <li th:if="${!#authorization.expression('isAuthenticated()')}">
+                <a href="/login" th:text="#{login}"></a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
+                <a href="/employee">Employee Dashboard</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <a href="/client">Client Dashboard</a>
+            </li>
+
+            <li><a href="books" th:utext="#{books}"></a></li>
+            <li><a href="/account"th:utext="#{account}">Account</a></li>
+            <li>
+                <a href="?lang=en" th:utext="#{lang.en}">EN</a> | <a href="?lang=uk" th:utext="#{lang.uk}">УКР</a>
+            </li>
+
         </ul>
 
     </nav>
@@ -34,20 +51,15 @@
         </div>
 
         <div class="about_tag">
-            <h1>About Our Book Store</h1>
+            <h1 th:text="#{about.title}">About Our Book Store</h1>
             <p>
-                Welcome to the world's leading digital bookstore. Since 2023, we've been dedicated to
-                providing book lovers with the best selection of titles across all genres. Our mission
-                is to make literature accessible to everyone, everywhere.
-
+                <span th:utext="#{about.description.ab}"></span>
                 <br><br>
-
-                With over 1 million titles in our catalog, we pride ourselves on curating both
-                bestsellers and hidden gems. Our team of passionate bibliophiles works tirelessly
-                to bring you personalized recommendations and a seamless shopping experience.
+                <span th:utext="#{about.description.continued}"></span>
             </p>
         </div>
     </div>
+
 </section>
 
 </body>

@@ -9,121 +9,116 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    
-    <section>
 
-        <nav>
+<section>
 
-            <div class="logo">
-                <img th:src="@{/image/logo.png}" alt="Logo">
-            </div>
+    <nav>
 
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="about">About</a></li>
-                <li><a href="register">Register</a></li>
-                <li><a href="login">Login</a></li>
-            </ul>
+        <div class="logo">
+            <img th:src="@{/image/logo.png}" alt="Logo">
+        </div>
 
-        </nav>
+        <ul>
+            <li><a href="/" th:utext="#{home}"></a></li>
+            <li><a href="about" th:utext="#{about}"></a></li>
+            <li th:if="${!#authorization.expression('isAuthenticated()')}">
+                <a href="register" th:utext="#{register}"></a>
+            </li>
+            <li th:if="${!#authorization.expression('isAuthenticated()')}">
+                <a href="/login" th:text="#{login}"></a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
+                <a href="/employee" th:text="#{employee.dashboard}">Employee Dashboard</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <a href="/client" th:text="#{client.dashboard}">Client Dashboard</a>
+            </li>
 
-        <div class="main">
+            <li><a href="books" th:utext="#{books}"></a></li>
+            <li><a href="/account"th:utext="#{account}">Account</a></li>
+            <li>
+                <a href="?lang=en" th:utext="#{lang.en}">EN</a> | <a href="?lang=uk" th:utext="#{lang.uk}">УКР</a>
+            </li>
 
-            <div class="main_tag">
-                <h1>WELCOME TO<br><span>BOOK STORE</span></h1>
+        </ul>
 
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda molestias atque laborum 
-                    non fuga ex deserunt. Exercitationem velit ducimus praesentium, obcaecati hic voluptate id 
-                    tenetur fuga illum quidem omnis? Rerum?
-                </p>
-                <a href="about" class="main_btn">Learn More</a>
+    </nav>
 
-            </div>
+    <div class="main">
 
-            <div class="main_img">
-                <img th:src="@{/image/table.png}" alt="Table Image">
-            </div>
+        <div class="main_tag">
+            <h1 th:utext="#{welcome.message}">WELCOME TO<br><span>BOOK STORE</span></h1>
+
+            <p th:text="#{about.description}">Lorem ipsum...</p>
+            <a href="about" class="main_btn">Learn More</a>
 
         </div>
 
-    </section>
-
-
-
-
-    <!--Services-->
-
-    <div class="services">
-
-        <div class="services_box">
-
-            <div class="services_card">
-                <i class="fa-solid fa-truck-fast"></i>
-                <h3>Fast Delivery</h3>
-                <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-                </p>
-            </div>
-
-            <div class="services_card">
-                <i class="fa-solid fa-headset"></i>
-                <h3>24 x 7 Services</h3>
-                <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-                </p>
-            </div>
-
-            <div class="services_card">
-                <i class="fa-solid fa-tag"></i>
-                <h3>Best Deal</h3>
-                <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-                </p>
-            </div>
-
-            <div class="services_card">
-                <i class="fa-solid fa-lock"></i>
-                <h3>Secure Payment</h3>
-                <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-                </p>
-            </div>
-
+        <div class="main_img">
+            <img th:src="@{/image/table.png}" alt="Table Image">
         </div>
 
     </div>
 
+</section>
 
 
 
-    <!--About-->
 
-    <div class="about">
+<!--Services-->
 
-        <div class="about_image">
-            <img src="image/about.png">
-        </div>
-        <div class="about_tag">
-            <h1>About Us</h1>
+<div class="services">
+
+    <div class="services_box">
+
+        <div class="services_card">
+            <i class="fa-solid fa-truck-fast"></i>
+            <h3 th:text="#{fast.delivery}">Fast Delivery</h3>
             <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Beatae cumque atque dolor corporis 
-                architecto. Voluptate expedita molestias maxime officia natus consectetur dolor quisquam illo? 
-                Quis illum nostrum perspiciatis laboriosam perferendis? Lorem ipsum dolor sit amet consectetur 
-                adipisicing elit. Minus ad eius saepe architecto aperiam laboriosam voluptas nobis voluptates 
-                id amet eos repellat corrupti harum consectetur, dolorum dolore blanditiis quam quo.
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </p>
-            <a href="about" class="about_btn">Learn More</a>
+        </div>
+
+        <div class="services_card">
+            <i class="fa-solid fa-headset"></i>
+            <h3 th:text="#{services.24x7}">24 x 7 Services</h3>
+            <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            </p>
+        </div>
+
+        <div class="services_card">
+            <i class="fa-solid fa-tag"></i>
+            <h3 th:text="#{best.deal}">Best Deal</h3>
+            <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            </p>
+        </div>
+
+        <div class="services_card">
+            <i class="fa-solid fa-lock"></i>
+            <h3 th:text="#{secure.payment}">Secure Payment</h3>
+            <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            </p>
         </div>
 
     </div>
 
+</div>
 
+<div class="about">
 
+    <div class="about_image">
+        <img src="image/about.png">
+    </div>
+    <div class="about_tag">
+        <h1 th:utext="#{about.us}">About Us</h1>
+        <p th:text="#{about.description}">Lorem ipsum...</p>
+        <a href="about" class="about_btn" th:text="#{learn.more}">Learn More</a>
+    </div>
 
+</div>
 
-
-
-    
 </body>
 </html>

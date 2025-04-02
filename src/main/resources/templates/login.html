@@ -16,29 +16,29 @@
         </div>
 
         <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="about">About</a></li>
-            <li><a href="register">Register</a></li>
-            <li><a href="login">Login</a></li>
+            <li><a href="/" th:utext="#{home}"></a></li>
+            <li><a href="about" th:utext="#{about}"></a></li>
+            <li><a href="register" th:utext="#{register}"></a></li>
         </ul>
 
     </nav>
 
     <div class="login-container">
         <form class="login-form" th:action="@{/login}" method="post">
-            <h2>Welcome Back!</h2>
+            <h2 th:text="#{login.welcome}">Welcome Back!</h2>
             <div class="form-group">
-                <label for="username">Email:</label>
+                <label for="username" th:text="#{login.email}">Email:</label>
                 <input type="email" id="username" name="username" required>
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
+                <label for="password" th:text="#{login.password}">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">Login</button>
-            <div id="error-message" class="error-message"></div>
+            <button type="submit" th:text="#{login.button}">Login</button>
+            <div id="error-message" class="error-message" th:text="#{login.error}" style="display: none;"></div>
         </form>
     </div>
+
 </section>
 
 <script>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store - Register</title>
+    <link rel="stylesheet" th:href="@{/css/register_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        .password-requirements {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        .requirement i {
+            margin-right: 5px;
+            font-size: 0.9em;
+        }
+        .valid {
+            color: #28a745;
+        }
+        .invalid {
+            color: #dc3545;
+        }
+        .password-strength {
+            height: 5px;
+            background: #ddd;
+            margin-top: 5px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .password-input-wrapper {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+        .toggle-password:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<section class="register-section">
+    <nav>
+        <div class="logo">
+            <img th:src="@{/image/logo.png}" alt="Logo">
+        </div>
+        <ul>
+            <li><a href="/" th:utext="#{home}"></a></li>
+            <li><a href="about" th:utext="#{about}"></a></li>
+            <li><a href="register" th:utext="#{register}"></a></li>
+        </ul>
+    </nav>
+
+    <div class="register-container">
+        <form class="register-form" th:action="@{/register}" method="post" id="registrationForm">
+            <h2 th:text="#{register.create}">Create Account</h2>
+            <div class="form-group">
+                <label for="name" th:text="#{register.name}">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email" th:text="#{register.email}">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password" th:text="#{register.password}">Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" name="password" required
+                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                           oninput="validatePassword()">
+                    <i class="toggle-password fas fa-eye" onclick="togglePasswordVisibility('password', this)"></i>
+                </div>
+                <div class="password-requirements">
+                    <div class="requirement">
+                        <i id="length-icon" class="fas fa-times invalid"></i>
+                        <span>Minimum 8 characters</span>
+                    </div>
+                    <div class="requirement">
+                        <i id="uppercase-icon" class="fas fa-times invalid"></i>
+                        <span>At least one uppercase letter</span>
+                    </div>
+                    <div class="requirement">
+                        <i id="lowercase-icon" class="fas fa-times invalid"></i>
+                        <span>At least one lowercase letter</span>
+                    </div>
+                    <div class="requirement">
+                        <i id="number-icon" class="fas fa-times invalid"></i>
+                        <span>At least one number</span>
+                    </div>
+                    <div class="requirement">
+                        <i id="special-icon" class="fas fa-times invalid"></i>
+                        <span>At least one special character (@$!%*?&)</span>
+                    </div>
+                </div>
+                <div class="password-strength">
+                    <div class="strength-bar" id="strength-bar"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password" th:text="#{register.confirm_password}">Confirm Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="confirm-password" name="confirmPassword" required
+                           oninput="checkPasswordMatch()">
+                    <i class="toggle-password fas fa-eye" onclick="togglePasswordVisibility('confirm-password', this)"></i>
+                </div>
+                <span id="password-match-message" class="error-message"></span>
+            </div>
+            <button type="submit" th:text="#{register.button}">Register</button>
+            <div id="error-message" class="error-message"
+                 th:if="${error != null}"
+                 th:text="${error}">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('strength-bar');
+
+            // Check requirements
+            const hasLength = password.length >= 8;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            const hasSpecial = /[@$!%*?&]/.test(password);
+
+            // Update icons
+            document.getElementById('length-icon').className = hasLength ?
+                'fas fa-check valid' : 'fas fa-times invalid';
+            document.getElementById('uppercase-icon').className = hasUpper ?
+                'fas fa-check valid' : 'fas fa-times invalid';
+            document.getElementById('lowercase-icon').className = hasLower ?
+                'fas fa-check valid' : 'fas fa-times invalid';
+            document.getElementById('number-icon').className = hasNumber ?
+                'fas fa-check valid' : 'fas fa-times invalid';
+            document.getElementById('special-icon').className = hasSpecial ?
+                'fas fa-check valid' : 'fas fa-times invalid';
+
+            // Calculate strength
+            let strength = 0;
+            if (hasLength) strength += 20;
+            if (hasUpper) strength += 20;
+            if (hasLower) strength += 20;
+            if (hasNumber) strength += 20;
+            if (hasSpecial) strength += 20;
+
+            // Update strength bar
+            strengthBar.style.width = strength + '%';
+            if (strength < 60) {
+                strengthBar.style.background = '#dc3545'; // Red
+            } else if (strength < 100) {
+                strengthBar.style.background = '#ffc107'; // Yellow
+            } else {
+                strengthBar.style.background = '#28a745'; // Green
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const message = document.getElementById('password-match-message');
+
+            if (confirmPassword === '') {
+                message.textContent = '';
+            } else if (password !== confirmPassword) {
+                message.textContent = 'Passwords do not match!';
+                message.style.color = '#dc3545';
+            } else {
+                message.textContent = 'Passwords match!';
+                message.style.color = '#28a745';
+            }
+        }
+
+        function togglePasswordVisibility(fieldId, icon) {
+            const passwordField = document.getElementById(fieldId);
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                document.getElementById('password-match-message').textContent = 'Passwords must match!';
+                document.getElementById('password-match-message').style.color = '#dc3545';
+            }
+        });
+    </script>
+</section>
+</body>
+</html>
