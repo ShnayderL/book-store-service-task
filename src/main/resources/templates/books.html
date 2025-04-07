@@ -5,151 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Store</title>
     <link rel="stylesheet" th:href="@{/css/books.css}">
-    <style>
-        .search-sort-container {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-            padding: 10px;
-            background: #f5f5f5;
-            border-radius: 5px;
-        }
-
-        .search-box {
-            flex: 1;
-            max-width: 400px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .sorting-options {
-            margin-left: 20px;
-        }
-
-        .sorting-options select {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .pagination {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .pagination a, .pagination span {
-            display: inline-block;
-            padding: 8px 12px;
-            margin: 0 2px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .pagination a:hover {
-            background: #f5f5f5;
-        }
-
-        .pagination .current {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-    </style>
 </head>
 <body>
 <section>
     <nav>
-        <!-- Navigation remains the same -->
+
+        <div class="logo">
+            <img th:src="@{/image/logo.png}" alt="Logo">
+        </div>
+
+        <ul>
+            <li><a href="/" th:utext="#{home}"></a></li>
+            <li><a href="about" th:utext="#{about}"></a></li>
+            <li th:if="${!#authorization.expression('isAuthenticated()')}">
+                <a href="register" th:utext="#{register}"></a>
+            </li>
+            <li th:if="${!#authorization.expression('isAuthenticated()')}">
+                <a href="/login" th:text="#{login}"></a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
+                <a href="/employee">Employee Dashboard</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <a href="/client">Client Dashboard</a>
+            </li>
+
+            <li><a href="books" th:utext="#{books}"></a></li>
+            <li><a href="/account"th:utext="#{account}">Account</a></li>
+            <li>
+                <a href="?lang=en" th:utext="#{lang.en}">EN</a> | <a href="?lang=uk" th:utext="#{lang.uk}">УКР</a>
+            </li>
+
+        </ul>
+
     </nav>
 </section>
 
 <div class="book-container">
     <h1 th:text="#{available.books}">Available Books</h1>
-
-    <!-- Search and Sorting Controls -->
-    <div class="search-sort-container">
-        <div class="search-box">
-            <form th:action="@{/books}" method="get">
-                <input type="text" name="search" placeholder="Search books..."
-                       th:value="${searchQuery}" th:attr="placeholder=#{search.placeholder}">
-                <input type="hidden" name="page" th:value="${currentPage}">
-                <input type="hidden" name="sort" th:value="${currentSort}">
-            </form>
+    <div class="books-grid">
+        <div class="book-card" th:each="book : ${books}">
+            <h3 th:text="${book.name}">Book Title</h3>
+            <p><strong th:text="#{book.author}">Author:</strong> <span th:text="${book.author}"></span></p>
+            <p><strong th:text="#{book.genre}">Genre:</strong> <span th:text="${book.genre}"></span></p>
+            <p><strong th:text="#{book.ageGroup}">Age Group:</strong> <span th:text="${book.ageGroup}"></span></p>
+            <p><strong th:text="#{book.price}">Price:</strong> <span th:text="#{currencySymbol} + ${book.price}"></span></p>
+            <p><strong th:text="#{book.publicationDate}">Publication Date:</strong> <span th:text="${book.publicationDate}"></span></p>
+            <p><strong th:text="#{book.pages}">Pages:</strong> <span th:text="${book.pages}"></span></p>
+            <p><strong th:text="#{book.language}">Language:</strong> <span th:text="${book.language}"></span></p>
+            <p><strong th:text="#{book.characteristics}">Characteristics:</strong> <span th:text="${book.characteristics}"></span></p>
+            <p><strong th:text="#{book.description}">Description:</strong> <span th:text="${book.description}"></span></p>
         </div>
-
-        <div class="sorting-options">
-            <form th:action="@{/books}" method="get">
-                <input type="hidden" name="search" th:value="${searchQuery}">
-                <input type="hidden" name="page" th:value="${currentPage}">
-                <select name="sort" onchange="this.form.submit()" th:attr="title=#{sort.title}">
-                    <option value="" th:text="#{sort.default}">Sort by</option>
-                    <option value="name,asc" th:selected="${currentSort == 'name,asc'}"
-                            th:text="#{sort.name_asc}">Title (A-Z)</option>
-                    <option value="name,desc" th:selected="${currentSort == 'name,desc'}"
-                            th:text="#{sort.name_desc}">Title (Z-A)</option>
-                    <option value="price,asc" th:selected="${currentSort == 'price,asc'}"
-                            th:text="#{sort.price_asc}">Price (Low to High)</option>
-                    <option value="price,desc" th:selected="${currentSort == 'price,desc'}"
-                            th:text="#{sort.price_desc}">Price (High to Low)</option>
-                    <option value="publicationDate,desc" th:selected="${currentSort == 'publicationDate,desc'}"
-                            th:text="#{sort.newest}">Newest First</option>
-                </select>
-            </form>
-        </div>
-    </div>
-
-    <!-- Books Grid -->
-    <div class="book-container">
-        <h1 th:text="#{available.books}">Available Books</h1>
-        <div class="books-grid">
-            <div class="book-card" th:each="book : ${books}">
-                <h3 th:text="${book.name}">Book Title</h3>
-                <p><strong th:text="#{book.author}">Author:</strong> <span th:text="${book.author}"></span></p>
-                <p><strong th:text="#{book.genre}">Genre:</strong> <span th:text="${book.genre}"></span></p>
-                <p><strong th:text="#{book.ageGroup}">Age Group:</strong> <span th:text="${book.ageGroup}"></span></p>
-                <p><strong th:text="#{book.price}">Price:</strong> <span th:text="#{currencySymbol} + ${book.price}"></span></p>
-                <p><strong th:text="#{book.publicationDate}">Publication Date:</strong> <span th:text="${book.publicationDate}"></span></p>
-                <p><strong th:text="#{book.pages}">Pages:</strong> <span th:text="${book.pages}"></span></p>
-                <p><strong th:text="#{book.language}">Language:</strong> <span th:text="${book.language}"></span></p>
-                <p><strong th:text="#{book.characteristics}">Characteristics:</strong> <span th:text="${book.characteristics}"></span></p>
-                <p><strong th:text="#{book.description}">Description:</strong> <span th:text="${book.description}"></span></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination" th:if="${books.totalPages > 1}">
-        <a th:if="${!books.first}" th:href="@{/books(search=${searchQuery}, page=0, sort=${currentSort})}">« First</a>
-        <a th:if="${books.hasPrevious()}" th:href="@{/books(search=${searchQuery}, page=${books.number - 1}, sort=${currentSort})}">‹ Prev</a>
-
-        <span th:each="page : ${#numbers.sequence(1, books.totalPages)}">
-            <a th:if="${page != books.number + 1}"
-               th:href="@{/books(search=${searchQuery}, page=${page - 1}, sort=${currentSort})}"
-               th:text="${page}"></a>
-            <span th:if="${page == books.number + 1}" class="current" th:text="${page}"></span>
-        </span>
-
-        <a th:if="${books.hasNext()}" th:href="@{/books(search=${searchQuery}, page=${books.number + 1}, sort=${currentSort})}">Next ›</a>
-        <a th:if="${!books.last}" th:href="@{/books(search=${searchQuery}, page=${books.totalPages - 1}, sort=${currentSort})}">Last »</a>
     </div>
 </div>
 
-<script>
-    // Auto-submit search form when typing stops
-    let searchTimeout;
-    document.querySelector('input[name="search"]').addEventListener('input', function(e) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            e.target.form.submit();
-        }, 500);
-    });
-</script>
+
 </body>
 </html>

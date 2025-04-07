@@ -28,7 +28,9 @@
             <a href="/client">Client Dashboard</a>
         </li>
         <li><a href="books">Books</a></li>
-        <li><a href="/account">Account</a></li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <a href="/account">Account</a>
+        </li>
     </ul>
 </nav>
 
